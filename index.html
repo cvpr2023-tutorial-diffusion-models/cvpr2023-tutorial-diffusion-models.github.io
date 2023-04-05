@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <meta name="keywords" content="cvpr, tutorial, cvpr-2023, cvpr2023, computer vision, machine learning, generative learning, diffusion, denoising, denoising diffusion, score-based, score function">
+
+  <link rel="shortcut icon" href="./img/cvpr.png">
+
+
+
+  <title>Denoising Diffusion Models: A Generative Learning Big Bang</title>
+  <meta name="description" content="Tutorial in Conjunction with CVPR 2023 ---">
+
+  <!--Open Graph Related Stuff-->
+  <meta property="og:title" content="Denoising Diffusion-based Generative Modeling: Foundations and Applications"/>
+  <meta property="og:url" content="https://cvpr2022-tutorial-diffusion-models.github.io"/>
+  <meta property="og:description" content="Tutorial in Conjunction with CVPR 2023"/>
+  <meta property="og:site_name" content="Denoising Diffusion-based Generative Modeling: Foundations and Applications"/>
+  <meta property="og:image" content="https://cvpr2022-tutorial-diffusion-models.github.io/img/thumbnail.png"/>
+  <meta property="og:image:url" content="https://cvpr2022-tutorial-diffusion-models.github.io/img/thumbnail.png"/>
+
+  <!--Twitter Card Stuff-->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@ArashVahdat">
+  <meta name="twitter:title" content="Denoising Diffusion-based Generative Modeling: Foundations and Applications"/>
+  <meta name="twitter:image" content="https://cvpr2022-tutorial-diffusion-models.github.io/img/thumbnail.png">
+  <meta name="twitter:url" content="https://cvpr2022-tutorial-diffusion-models.github.io/"/>           
+  <meta name="twitter:description" content="Tutorial on Diffusion Models in Conjunction with CVPR 2022"/>
+
+  <!-- CSS  -->
+  <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./css/main.css?1" media="screen,projection">
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/ff6e9b10da.js" crossorigin="anonymous"></script>
+</head>
+
+  <body>
+
+    <!-- <div class="top-strip"></div> -->
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"></a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <div class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+	<li><a href="#speakers">Speakers</a></li>
+        <li><a href="#talks">Schedule</a></li>
+        <li><a href="#organizers">About Us</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+    <div class="container">
+      <div class="page-content">
+          <p><br /></p>
+<div class="row">
+  <div class="col-xs-12">
+  <center><h2><b>CVPR 2023 Tutorial:</b></h2></center><br>
+    <center><h1>Denoising Diffusion Models: <br> A Generative Learning Big Bang</h1></center>
+        <center><b>Dates</b>: Monday June 19, 8:00 am - 12:00 pm (PT)
+        <!--
+        <font color="#76b900"><b><a target="_blank" href="https://www.youtube.com/watch?v=n0p1zz0ZFiY">Live Session Recording</a></b></font></center> 
+        <center><b>Time slot 2</b>: <strike>Sunday 23 August, 6:30 am - 8:00 am (PDT)</strike>, <font color="#76b900"><b><a target="_blank" href="https://www.youtube.com/watch?v=mYD783Z-wb8">Live Session Recording</a></b></font></center>
+        <center>ECCV 2020 <font color="#76b900"> <b><a target="_blank" href="https://workshopsandtutorials.eccv2020.eu/papers/category/tutorial-sunday-aug-23/new-frontiers-for-learning-with-limited-labels-or-data/">Microsite</a></b></font>, Pre-recorded talks: Youtube <font color="#76b900"><b><a target="_blank" href="https://www.youtube.com/playlist?list=PLDEjP3Cd-gys9TC1RuboblGzwfsaJ9FxU">Playlist</a></b></font>, Bilibili <font color="#76b900"><b><a target="_blank" href="https://www.bilibili.com/read/cv7268682?share_source=copy_link&amp;share_medium=iphone&amp;bbid=Z34AB836729C35E84416ACBF44A761007D7D&amp;ts=1598042304">Playlist</a></b></font>
+        -->
+        </center>
+  </div>
+</div>
+
+<center>
+<br>
+<a>
+    <img width="300px" src="./img/cvpr2023.svg" />
+</a>
+<br>
+<a>
+    <img src="./img/diffusion.png" />
+</a>
+</center>
+
+<!-- <br>
+<p style="color:red;text-align:center">
+<b> &#x1F4E2; &#x1F3A5; Check <a href="https://drive.google.com/file/d/1DYHDbt1tSl9oqm3O333biRYzSCOtdtmn/view?usp=sharing">this Google drive link</a> for our tutorial slides and this <a href="https://www.youtube.com/watch?v=cS6JQpEY9cs">YouTube link</a> for the video recording.</b>
+</p>
+<br> -->
+
+<br/>
+<h2>Overview</h2>
+<br/>
+<p>
+Score-based denoising diffusion models (diffusion models) have been successfully used in various applications such as text-to-image generation, natural language generation, audio synthesis, motion generation, and time series modeling. The rate of progress on diffusion models is astonishing. In the year 2022 alone, diffusion models have been applied to many large-scale text-to-image foundation models, such as DALL-E 2, Imagen, Stable Diffusion and eDiff-I. These developments have also driven novel computer vision applications, such as solving inverse problems, semantic image editing, few-shot textual inversion, prompt-to-prompt editing, and lifting 2d models for 3d generation. Diffusion models have been widely adopted in various computer vision applications and are becoming a dominating class of generative models. This popularity is also reflected in the diffusion models tutorial in CVPR 2022, which has accumulated <a href="https://www.youtube.com/watch?v=cS6JQpEY9cs">nearly 50,000 views on YouTube</a> over 4 months. 
+</p>
+<p>
+Despite that, there has been tremendous novel work on diffusion models over 2022, a lot of which we believe are critical for computer vision practitioners. 
+The following are just a few notable examples: Eludicated Diffusion Models (NeurIPS 2022 best paper) provide principles on how one should train diffusion models in an optimal manner. Recent differential equation solvers such as DPM-Solver (NeurIPS 2022 Oral) and DEIS have made notable advances on accelerating sampling from diffusion models. Diffusion inversion techniques such as DreamFusion and Magic3d obtain text-to-3D generation by inverting image diffusion models. Textual inversion and DreamBooth enable the ``personalization'' of text-to-image diffusion models from few-shot supervision signals. There are also numerous recent works that apply diffusion models to other domains, such as 3d representations, videos, and motions. Given the rate of progress, we believe that it is crucial to have a tutorial on diffusion models in CVPR 2023, focusing on more recent developments.
+</p>
+<p>
+The primary goal of this tutorial is to make diffusion models more accessible to a wider computer vision audience and introduce recent developments in diffusion models. Unlike the <a href="https://cvpr2022-tutorial-diffusion-models.github.io/">previous tutorial</a>, we will streamline the discussion on fundamentals and focus much more on practical methods and applications of diffusion models. We will present successful practices on training and sampling from diffusion models and discuss novel applications that are enabled by diffusion models in the computer vision domain. These discussions will also heavily lean on recent research developments that are released in 2022 and 2023, so as to not repeat the materials already discussed in the previous tutorial. We hope that this second tutorial on diffusion models will attract more computer vision practitioners interested in this topic to make further progress in this exciting area.
+</p>
+<br id="speakers" /><br/>
+
+
+<div class="row">
+  <div class="col-xs-12">
+    <h2>Speakers</h2><br>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+
+
+  <div class="row">
+    <div class="col-xs-4" id="jiaming">
+      <center>
+      <a href="https://tsong.me/">
+        <img class="people-pic" src="./img/people/jiamings.jpeg" />
+      </a>
+      <div class="people-name">
+        <a href="https://tsong.me/">Jiaming Song</a>
+        <h6>NVIDIA</h6>
+      </div>
+    </center>
+    </div>
+    <div class="col-xs-4" id="chenlin">
+      <center>
+      <a href="https://ruiqigao.github.io/">
+        <img class="people-pic" src="./img/people/ruiqi.png" />
+      </a>
+      <div class="people-name">
+        <a href="https://ruiqigao.github.io/">Chenlin Meng</a>
+        <h6>Stanford</h6>
+      </div>
+    </center>
+    </div>
+    <div class="col-xs-4" id="arash">
+      <center>
+      <a href="http://arashvahdat.com">
+        <img class="people-pic" src="./img/people/arash.jpg" />
+      </a>
+      <div class="people-name">
+         <a href="http://arashvahdat.com">Arash Vahdat</a>
+        <h6>NVIDIA</h6>
+      </div>
+    </center>
+    </div>
+  </div>
+
+  <div class="row">
+	<center>
+	    <img src="./img/nvidia_logo.png" style="width:30%" />
+	    <!-- <img src="./img/googleai_logo.png" style="width:30%" /> -->
+	</center>
+  </div>
+
+<br id="talks" />
+<br>
+<br>
+
+<div class="row">
+  <div class="col-xs-12">
+     <h2>Schedule</h2>
+     <table class="table schedule" style="border:none !important;">
+      <thead class="thead-light">
+        <tr>
+        <th>Title</th>
+        <th>Speaker</th>
+        <th>Time (CDT)</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+            <td>Introduction</td>
+            <td><a href="http://arashvahdat.com">Arash Vahdat</a></td>
+            <td>08:30 - 08:40</td>
+        </tr>
+
+        <tr>
+            <td>Part (1): Denoising Diffusion Probabilistic Models</td>
+            <td><a href="http://arashvahdat.com">Arash Vahdat</a></td>
+            <td>08:40 - 09:15</td>
+        </tr>
+
+        <tr>
+            <td>Part (2): Score-based Generative Modeling with Differential Equations</td>
+            <td><a href="https://karstenkreis.github.io/">Karsten Kreis</a></td>
+            <td>09:15 - 10:00</td>
+        </tr>
+        <tr>
+          <td><b>Coffee Break</b></td>
+          <td> - </td>
+          <td><b>10:00 - 10:30</b></td>
+        </tr>
+
+        <tr>
+            <td>Part (3): Advanced Techniques: Accelerated Sampling, Conditional Generation, and Beyond</td>
+            <td><a href="https://ruiqigao.github.io/">Ruiqi Gao</a></td>
+            <td>10:30 - 11:15</td>
+        </tr>
+
+        <tr>
+            <td>Applications (1): Image Synthesis, Text-to-Image, Controllable and Semantic Generation</td>
+            <td><a href="https://ruiqigao.github.io/">Ruiqi Gao</a></td>
+            <td>11:15 - 11:30</td>
+        </tr>
+
+        <tr>
+            <td>Applications (2): Image Editing, Image-to-Image, Superresolution, Segmentation</td>
+            <td><a href="http://arashvahdat.com">Arash Vahdat</a></td>
+            <td>11:30 - 11:45</td>
+        </tr>
+
+        <tr>
+            <td>Applications (3): Discrete State Models, 3D Generation, Medical Imaging, Video Synthesis</td>
+            <td><a href="https://karstenkreis.github.io/">Karsten Kreis</a></td>
+            <td>11:45 - 12:00</td>
+        </tr>
+
+        <tr>
+            <td>Conclusions, Open Problems and Final Remarks</td>
+            <td><a href="http://arashvahdat.com">Arash Vahdat</a></td>
+            <td>12:00 - 12:10</td>
+        </tr>
+
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<br id="organizers" />
+<br>
+<br>
+<br>
+
+<div class="row">
+  <div class="col-xs-12">
+    <h2>About Us</h2>
+  </div>
+</div>
+
+<div class="row speaker" id="jiamings">
+  <div class="col-sm-3 speaker-pic">
+    <a href="https://tsong.me/">
+      <img class="people-pic" src="./img/people/jiamings.jpeg" />
+    </a>
+    <div class="people-name">
+      <a href="https://tsong.me/">Jiaming Song</a> <a href="https://twitter.com/baaadas"><img src="./img/Twitter_Social_Icon_Rounded_Square_Color.png" /></a>
+      <h6>NVIDIA</h6>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <p class="speaker-bio">
+    Jiaming Song is a research scientist at NVIDIA Research. Prior to joining NVIDIA, he worked on deep generative modeling at Stanford University, under the supervision of Stefano Ermon. He is the creator of DDIM, the earliest accelerated algorithm for diffusion models that is widely used in recent generative AI systems including DALL-E 2, Imagen, Stable Diffusion, and ERNIE-ViLG 2.0. He also served a critical role in developing SDEdit, which is used in Stable Diffusion for image-to-image translation. He also co-developed eDiff-I, NVIDIA's first large-scale text-to-image diffusion model. Jiaming is a recipient of the ICLR 2022 Outstanding Paper Award.
+    </p>
+  </div>
+</div>
+
+
+
+
+<div class="row speaker" id="ruiqi">
+  <div class="col-sm-3 speaker-pic">
+    <a href="https://ruiqigao.github.io/">
+      <img class="people-pic" src="./img/people/ruiqi.png" />
+    </a>
+    <div class="people-name">
+      <a href="https://ruiqigao.github.io/">Ruiqi Gao</a> <a href="https://twitter.com/RuiqiGao"><img src="./img/Twitter_Social_Icon_Rounded_Square_Color.png" /></a>
+      <h6>Google Brain</h6>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <p class="speaker-bio">
+Ruiqi Gao is a research scientist at Google Research, Brain team. Her research interests are in statistical modeling and learning, with a focus on generative models and representation learning. She received her Ph.D. degree in statistics from the University of California, Los Angeles (UCLA) in 2021 working in the Center for Vision,
+Cognition, Learning, and Autonomy (VCLA), advised by Song-Chun Zhu and Ying Nian Wu. Her recent research themes include scalable training algorithms of deep generative models and applications in computer vision, natural language processing and neuroscience.
+    </p>
+  </div>
+</div>
+
+
+
+<div class="row speaker" id="arash">
+  <div class="col-sm-3 speaker-pic">
+    <a href="http://latentspace.cc/arash_vahdat/">
+      <img class="people-pic" src="./img/people/arash.jpg" />
+    </a>
+    <div class="people-name">
+      <a href="http://latentspace.cc/arash_vahdat/">Arash Vahdat</a> <a href="https://twitter.com/ArashVahdat"><img src="./img/Twitter_Social_Icon_Rounded_Square_Color.png" /></a>
+      <h6>NVIDIA</h6>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <p class="speaker-bio">
+    Arash Vahdat is a principal research scientist at NVIDIA research specializing in computer vision and machine learning. Before joining NVIDIA, he was a research scientist at D-Wave Systems where he worked on deep generative learning and weakly supervised learning. Prior to D-Wave, Arash was a research faculty member at Simon Fraser University (SFU), where he led research on deep video analysis and taught graduate-level courses on machine learning for big data. Arash obtained his Ph.D. and M.Sc. from SFU under Greg Mori’s supervision working on latent variable frameworks for visual analysis. His current areas of research include deep generative learning, weakly supervised learning, efficient neural networks, and probabilistic deep learning.
+    </p>
+  </div>
+</div>
+
+
+
+
+
+<br />
+</div></div>
+
+      </div>
+    </div>
+                <div class="section text-gray" id="footer">
+                <div class="container">
+
+                    <div class="row">
+                       <div class="col-sm-6">
+
+                            <!-- <p class="social">
+                                <a href="mailto:organizers@pirm2018.org" class="email" data-animate-hover="shake" data-animate="fadeInUp"><i class="fa fa-envelope"></i></a>
+                            </p> -->
+                        </div>
+                        <!-- /.6 -->  
+                        <div class="col-sm-6">
+                            <p><small>&copy; 2023 <a href="http://nvlabs.github.io" class="external">Jiaming Song, Chenlin Meng, Arash Vahdat</a>.
+                            Template by <a href="https://nvlabs.github.io/eccv2020-limited-labels-data-tutorial/" class="external"> Shalini De Mello</a>.</small></p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+  </body>
+</html>
